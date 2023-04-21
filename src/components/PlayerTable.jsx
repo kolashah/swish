@@ -1,21 +1,37 @@
 import React from 'react';
 import { useTable } from 'react-table';
 
-function PlayerTable({ data }) {
+function PlayerTable({ data, groupedAlts }) {
+  console.log('g:', groupedAlts);
+
+  function capitalize(word) {
+    return word.charAt(0).toUpperCase() + word.slice(1);
+  }
+
   const columns = React.useMemo(
     () => [
       {
         Header: 'Stat Type',
         accessor: 'statType',
+        Cell: ({ value }) => capitalize(value),
+      },
+      {
+        Header: 'Optimal Line',
+        accessor: 'line',
+      },
+      {
+        Header: 'High Line',
+        accessor: 'highLine',
+        
+      },
+      {
+        Header: 'Low Line',
+        accessor: 'lowLine',
       },
       {
         Header: 'Market Status',
         accessor: 'marketSuspended',
         Cell: ({ value }) => (value ? 'Suspended' : 'Open'),
-      },
-      {
-        Header: 'Line',
-        accessor: 'line',
       },
     ],
     []
@@ -27,7 +43,7 @@ function PlayerTable({ data }) {
   return (
     <table
       {...getTableProps()}
-      style={{ borderCollapse: 'collapse', width: '300px' }}
+      style={{ borderCollapse: 'collapse', width: '100%' }}
     >
       <thead>
         {headerGroups.map((headerGroup) => (

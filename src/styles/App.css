@@ -1,3 +1,11 @@
+.playerContainer {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-gap: 20px;
+}
 .player {
-  background-color: red;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  padding: 10px;
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
 }

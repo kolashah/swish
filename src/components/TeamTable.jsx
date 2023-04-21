@@ -1,21 +1,23 @@
 import React from 'react';
 import PlayerTable from './PlayerTable';
- 
+import '../styles/App.css';
 
-function TeamTables({ groupedData}) {
-  
+function TeamTables({ groupedData, groupedAlts }) {
   return (
     <div>
       {Object.entries(groupedData).map(([team, players]) => (
         <div key={team}>
           <h2>{team}</h2>
-          {Object.entries(players).map(([player, playerData]) => (
-            <div className="player" key={player}>
-              {console.log(playerData)}
-              <h3>{player} ({playerData[0].position})</h3>
-              <PlayerTable data={playerData} />
-            </div>
-          ))}
+          <div className="playerContainer">
+            {Object.entries(players).map(([playerId, playerData]) => (
+              <div className="player" key={playerId}>
+                <h3>
+                  {playerData[0].playerName} ({playerData[0].position})
+                </h3>
+                <PlayerTable data={playerData} groupedAlts={groupedAlts} />
+              </div>
+            ))}
+          </div>
         </div>
       ))}
     </div>
