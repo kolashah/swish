@@ -2,7 +2,6 @@ import React from 'react';
 import { useTable } from 'react-table';
 
 function PlayerTable({ data, groupedAlts }) {
-  console.log('g:', groupedAlts);
 
   function capitalize(word) {
     return word.charAt(0).toUpperCase() + word.slice(1);
@@ -51,7 +50,7 @@ function PlayerTable({ data, groupedAlts }) {
             {headerGroup.headers.map((column) => (
               <th
                 {...column.getHeaderProps()}
-                style={{ borderBottom: 'solid 2px gray', textAlign: 'left' }}
+                style={{ borderBottom: 'solid 2px gray', textAlign: 'center' }}
               >
                 {column.render('Header')}
               </th>
