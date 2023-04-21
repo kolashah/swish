@@ -1,7 +1,7 @@
 import React from 'react';
 import { useTable } from 'react-table';
 
-function PlayerTable({ data, groupedAlts }) {
+function PlayerTable({ data }) {
 
   function capitalize(word) {
     return word.charAt(0).toUpperCase() + word.slice(1);
