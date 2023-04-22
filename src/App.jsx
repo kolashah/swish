@@ -1,12 +1,36 @@
+import React, { useState, useEffect } from 'react';
 import markets from './assets/props.json';
 import odds from './assets/alternates.json';
 import TeamTables from './components/TeamTable.jsx';
 import Sidebar from './components/Sidebar.jsx';
+import './styles/App.css';
 
 function App() {
+  const [position, setPosition] = useState({
+    PG: true,
+    PF: true,
+    C: true,
+    SF: true,
+    SG: true,
+  });
+
+  const [groupedData, setGroupedData] = useState(() =>
+    groupDataByTeamAndPlayer(markets, position)
+  );
+  const groupedAlts = groupAlternatesByPlayer(odds);
+
+  useEffect(() => {
+    setGroupedData(groupDataByTeamAndPlayer(markets, position));
+  }, [position]);
+
+  function handleFilterChange(name, value, checked) {
+    setPosition((prev) => ({ ...prev, [value]: checked }))
+  }
+
   // Function to group data by team and then by player
-  function groupDataByTeamAndPlayer(data) {
-    return data.reduce((groupedData, item) => {
+  function groupDataByTeamAndPlayer(data, position) {
+  const filteredData = data.filter((player) => position[player.position]);
+    return filteredData.reduce((groupedData, item) => {
       const { teamNickname, playerId } = item;
 
       // Initialize a new object for the team if it doesn't exist
@@ -24,8 +48,6 @@ function App() {
       return groupedData;
     }, {});
   }
-  const groupedData = groupDataByTeamAndPlayer(markets);
-
   // Function to group alternate odds by player and then by statType
   function groupAlternatesByPlayer(data) {
     return data.reduce((groupedData, item) => {
@@ -46,10 +68,10 @@ function App() {
       return groupedData;
     }, {});
   }
-  const groupedAlts = groupAlternatesByPlayer(odds);
+
   return (
     <div className="App">
-      <Sidebar groupedData={groupedData} />
+      <Sidebar onFilterChange={handleFilterChange} />
       <TeamTables groupedData={groupedData} groupedAlts={groupedAlts} />
     </div>
   );

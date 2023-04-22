@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useTable } from 'react-table';
 
 function PlayerTable({ data }) {
@@ -8,7 +8,7 @@ function PlayerTable({ data }) {
   }
 
   // Define columns for the player table using React.useMemo for performance optimization
-  const columns = React.useMemo(
+  const columns = useMemo(
     () => [
       {
         Header: 'Stat Type',

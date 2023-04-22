@@ -1,6 +1,5 @@
 import React from 'react';
 import PlayerTable from './PlayerTable';
-import '../styles/App.css';
 
 // Find odds for the given optimalLine from the array of alternate lines
 function findOddsByLine(altLines, optimalLine) {
