@@ -2,20 +2,24 @@ import React from 'react';
 import PlayerTable from './PlayerTable';
 import '../styles/App.css';
 
+// Find odds for the given optimalLine from the array of alternate lines
 function findOddsByLine(altLines, optimalLine) {
   return altLines.find((alt) => alt.line === optimalLine);
 }
 
+// Process player data by calculating market suspension status, highLine, and lowLine
 function processData(data, groupedAlts) {
   return data.map((row) => {
     const { statType, line } = row;
 
-    //check if optimal line exists
+    // Get alternate lines for the given statType
     const altLines = groupedAlts[statType] || [];
     const altLineValues = altLines.map((alt) => alt.line);
+
+    // Check if the optimal line exists in alternate lines
     const optimalLineExists = altLineValues.includes(line);
 
-    //check if over/under/push odds have one over 40%
+    // Check if any of over/under/push odds are greater than 40% for the optimal line
     const optimalLine = row.line;
     const {
       overOdds = 0,
@@ -23,16 +27,19 @@ function processData(data, groupedAlts) {
       pushOdds = 0,
     } = findOddsByLine(altLines, optimalLine) ?? {};
     const oddsAboveForty = Math.max(overOdds, underOdds, pushOdds) <= 0.4;
-    console.log(oddsAboveForty);
+
+    // Return processed row data
     return {
       ...row,
       highLine: Math.max(row.line, ...altLineValues),
       lowLine: Math.min(row.line, ...altLineValues),
-      marketSuspended: !optimalLineExists || oddsAboveForty ? 1 : row.marketSuspended,
+      marketSuspended:
+        !optimalLineExists || oddsAboveForty ? 1 : row.marketSuspended,
     };
   });
 }
 
+// Render team tables with processed player data
 export default function TeamTables({ groupedData, groupedAlts }) {
   return (
     <div>
@@ -41,6 +48,8 @@ export default function TeamTables({ groupedData, groupedAlts }) {
           <h2>{team}</h2>
           <div className="playerContainer">
             {Object.entries(players).map(([playerId, playerData]) => {
+              
+              // Process player data and calculate market suspension status, highLine, and lowLine
               const processedData = processData(
                 playerData,
                 groupedAlts[playerId] || {}
@@ -48,13 +57,13 @@ export default function TeamTables({ groupedData, groupedAlts }) {
 
               // Sort the processedData array based on the statType property
               const statTypeOrder = ['points', 'rebounds', 'assists', 'steals'];
-
               const sortedData = processedData.sort((a, b) => {
                 const aIndex = statTypeOrder.indexOf(a.statType);
                 const bIndex = statTypeOrder.indexOf(b.statType);
                 return aIndex - bIndex;
               });
 
+              // Render player data in a table
               return (
                 <div className="player" key={playerId}>
                   <h3>

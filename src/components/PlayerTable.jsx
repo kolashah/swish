@@ -2,11 +2,12 @@ import React from 'react';
 import { useTable } from 'react-table';
 
 function PlayerTable({ data }) {
-
+  // Function to capitalize the first letter of a word
   function capitalize(word) {
     return word.charAt(0).toUpperCase() + word.slice(1);
   }
 
+  // Define columns for the player table using React.useMemo for performance optimization
   const columns = React.useMemo(
     () => [
       {
@@ -21,7 +22,6 @@ function PlayerTable({ data }) {
       {
         Header: 'High Line',
         accessor: 'highLine',
-        
       },
       {
         Header: 'Low Line',
@@ -36,9 +36,11 @@ function PlayerTable({ data }) {
     []
   );
 
+  // Create an instance of the table using the useTable hook
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
     useTable({ columns, data });
 
+  // Render the table using the table instance properties and methods
   return (
     <table
       {...getTableProps()}
