@@ -47,7 +47,6 @@ function App() {
     }, {});
   }
   const groupedAlts = groupAlternatesByPlayer(odds);
-
   return (
     <div className="App">
       <Sidebar groupedData={groupedData} />
