@@ -6,30 +6,52 @@ import Sidebar from './components/Sidebar.jsx';
 import './styles/App.css';
 
 function App() {
-  const [position, setPosition] = useState({
-    PG: true,
-    PF: true,
-    C: true,
-    SF: true,
-    SG: true,
+  const [filters, setFilters] = useState({
+    position: { PG: true, PF: true, C: true, SF: true, SG: true },
+    statType: { points: true, rebounds: true, assists: true, steals: true },
+    marketSuspended: 'all',
   });
 
   const [groupedData, setGroupedData] = useState(() =>
-    groupDataByTeamAndPlayer(markets, position)
+    groupDataByTeamAndPlayer(markets, filters)
   );
   const groupedAlts = groupAlternatesByPlayer(odds);
 
   useEffect(() => {
-    setGroupedData(groupDataByTeamAndPlayer(markets, position));
-  }, [position]);
+    setGroupedData(groupDataByTeamAndPlayer(markets, filters));
+  }, [filters]);
 
-  function handleFilterChange(name, value, checked) {
-    setPosition((prev) => ({ ...prev, [value]: checked }))
+  function handleFilterChange(filterType, value, checked) {
+    if (filterType === 'position') {
+      setFilters((prev) => ({
+        ...prev,
+        position: { ...prev.position, [value]: checked },
+      }));
+    } else if (filterType === 'statType') {
+      setFilters((prev) => ({
+        ...prev,
+        statType: { ...prev.statType, [value]: checked },
+      }));
+    } else if (filterType === 'marketSuspended') {
+      setFilters((prev) => ({
+        ...prev,
+        marketSuspended: value,
+      }));
+    }
   }
 
   // Function to group data by team and then by player
-  function groupDataByTeamAndPlayer(data, position) {
-  const filteredData = data.filter((player) => position[player.position]);
+  function groupDataByTeamAndPlayer(data, filters) {
+    const { position, statType, marketSuspended } = filters;
+
+    const filteredData = data.filter(
+      (player) =>
+        position[player.position] &&
+        statType[player.statType] &&
+        (marketSuspended === 'all' ||
+          (marketSuspended === 'suspended' && player.marketSuspended) ||
+          (marketSuspended === 'open' && !player.marketSuspended))
+    );
     return filteredData.reduce((groupedData, item) => {
       const { teamNickname, playerId } = item;
 
@@ -71,7 +93,7 @@ function App() {
 
   return (
     <div className="App">
-      <Sidebar onFilterChange={handleFilterChange} />
+      <Sidebar filters={filters} onFilterChange={handleFilterChange} />
       <TeamTables groupedData={groupedData} groupedAlts={groupedAlts} />
     </div>
   );
