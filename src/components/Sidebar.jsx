@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
+import React from 'react';
 
-function Sidebar({ filters, onFilterChange }) {
-
+export default function Sidebar({ filters, onFilterChange }) {
   const positions = ['PG', 'PF', 'C', 'SF', 'SG'];
   const statTypes = ['points', 'rebounds', 'assists', 'steals'];
 
@@ -18,10 +17,11 @@ function Sidebar({ filters, onFilterChange }) {
   return (
     <div className="Sidebar">
       <div className="filter">
-        <span>Position:</span>
+        <label htmlFor="position-filter">Position:</label>
         {positions.map((pos) => (
           <label key={pos}>
             <input
+              id="position-filter"
               type="checkbox"
               name="position"
               value={pos}
@@ -33,10 +33,11 @@ function Sidebar({ filters, onFilterChange }) {
         ))}
       </div>
       <div className="filter">
-        <span>Stat Type:</span>
+        <label htmlFor="stat-type-filter">Stat Type:</label>
         {statTypes.map((statType) => (
           <label key={statType}>
             <input
+              id="stat-type-filter"
               type="checkbox"
               name="statType"
               value={statType}
@@ -48,8 +49,9 @@ function Sidebar({ filters, onFilterChange }) {
         ))}
       </div>
       <div className="filter">
-        <span>Market Status:</span>
+        <label htmlFor="market-status-filter">Market Status:</label>
         <select
+          id="market-status-filter"
           value={filters.marketSuspended}
           onChange={handleMarketSuspendedChange}
         >
@@ -61,5 +63,3 @@ function Sidebar({ filters, onFilterChange }) {
     </div>
   );
 }
-
-export default Sidebar;
