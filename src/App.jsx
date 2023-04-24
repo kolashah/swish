@@ -6,21 +6,26 @@ import Sidebar from './components/Sidebar.jsx';
 import './styles/App.css';
 
 function App() {
+  //create state for filters
   const [filters, setFilters] = useState({
     position: { PG: true, PF: true, C: true, SF: true, SG: true },
     statType: { points: true, rebounds: true, assists: true, steals: true },
     marketSuspended: 'all',
   });
 
+  //create state for grouped data
   const [groupedData, setGroupedData] = useState(() =>
     groupDataByTeamAndPlayer(markets, filters)
   );
+
   const groupedAlts = groupAlternatesByPlayer(odds);
 
+  //update grouped data when filters change
   useEffect(() => {
     setGroupedData(groupDataByTeamAndPlayer(markets, filters));
   }, [filters]);
 
+  //updates the state of filters when applied in the sidebar
   function handleFilterChange(filterType, value, checked) {
     if (filterType === 'position') {
       setFilters((prev) => ({
@@ -40,11 +45,11 @@ function App() {
     }
   }
 
-  // Function to group data by team and then by player
-  function groupDataByTeamAndPlayer(data, filters) {
+  //when filters are applied, filter data sent to TeamTables
+  function filterData(data) {
     const { position, statType, marketSuspended } = filters;
 
-    const filteredData = data.filter(
+    return data.filter(
       (player) =>
         position[player.position] &&
         statType[player.statType] &&
@@ -52,6 +57,13 @@ function App() {
           (marketSuspended === 'suspended' && player.marketSuspended) ||
           (marketSuspended === 'open' && !player.marketSuspended))
     );
+  }
+
+  // Function to group data by team and then by player
+  function groupDataByTeamAndPlayer(data) {
+    
+    const filteredData = filterData(data);
+
     return filteredData.reduce((groupedData, item) => {
       const { teamNickname, playerId } = item;
 
