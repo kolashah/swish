@@ -6,6 +6,7 @@ import Sidebar from './components/Sidebar.jsx';
 import {
   groupDataByTeamAndPlayer,
   groupAlternatesByPlayer,
+  processData,
 } from './utils/dataUtils';
 import './styles/App.css';
 
@@ -21,10 +22,13 @@ function App() {
   });
 
   // Memoize the result of groupDataByTeamAndPlayer to avoid unnecessary calculations
-  const memoizedGroupedData = useMemo(
-    () => groupDataByTeamAndPlayer(marketStatusData, filters),
-    [marketStatusData, filters]
-  );
+  const memoizedGroupedData = useMemo(() => {
+    const processedData = processData(
+      marketStatusData,
+      groupAlternatesByPlayer(odds)
+    );
+    return groupDataByTeamAndPlayer(processedData, filters);
+  }, [marketStatusData, filters]);
 
   // Update the groupedData state whenever memoizedGroupedData changes
   useEffect(() => {
@@ -91,7 +95,6 @@ function App() {
       />
       <TeamTables
         groupedData={groupedData}
-        groupedAlts={groupAlternatesByPlayer(odds)}
         toggleMarketStatus={toggleMarketStatus}
         updateMarketStatusData={updateMarketStatusData}
       />

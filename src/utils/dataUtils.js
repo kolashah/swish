@@ -60,3 +60,40 @@ export function groupAlternatesByPlayer(data) {
     return groupedData;
   }, {});
 }
+
+// Find odds for the given optimalLine from the array of alternate lines
+function findOddsByLine(altLines, optimalLine) {
+  return altLines.find((alt) => alt.line === optimalLine);
+}
+
+// dataUtils.js
+export function processData(data, groupedAlts) {
+  return data.map((row) => {
+    const { playerId, statType, line } = row;
+
+    // Get alternate lines for the given statType
+    const altLines = groupedAlts[playerId]?.[statType] || [];
+    const altLineValues = altLines.map((alt) => alt.line);
+
+    // Check if the optimal line exists in alternate lines
+    const optimalLineExists = altLineValues.includes(line);
+
+    // Check if any of over/under/push odds are greater than 40% for the optimal line
+    const optimalLine = row.line;
+    const {
+      overOdds = 0,
+      underOdds = 0,
+      pushOdds = 0,
+    } = findOddsByLine(altLines, optimalLine) ?? {};
+    const oddsAboveForty = Math.max(overOdds, underOdds, pushOdds) > 0.4;
+
+    // Return processed row data
+    return {
+      ...row,
+      highLine: Math.max(row.line, ...altLineValues),
+      lowLine: Math.min(row.line, ...altLineValues),
+      marketSuspended:
+        !optimalLineExists || !oddsAboveForty ? 1 : row.marketSuspended,
+    };
+  });
+}

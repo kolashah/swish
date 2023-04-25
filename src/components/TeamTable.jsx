@@ -2,7 +2,8 @@ import React from 'react';
 import PlayerTable from './PlayerTable';
 
 // Render team tables with processed player data
-function TeamTables({ groupedData, groupedAlts, toggleMarketStatus }) {
+// TeamTables.jsx
+function TeamTables({ groupedData, toggleMarketStatus }) {
   return (
     <div>
       {Object.entries(groupedData).map(([team, players]) => (
@@ -10,16 +11,10 @@ function TeamTables({ groupedData, groupedAlts, toggleMarketStatus }) {
           <h2>{team}</h2>
           <div className="playerContainer">
             {Object.entries(players).map(([playerId, playerData]) => {
-              // Process player data and calculate market suspension status, highLine, and lowLine
-              const processedData = processData(
-                playerData,
-                groupedAlts[playerId] || {}
-              );
-
-              // Sort the processedData array based on the statType property
+              // Sort the playerData array based on the statType property
               const statTypeOrder = ['points', 'rebounds', 'assists', 'steals'];
 
-              const sortedData = processedData.sort((a, b) => {
+              const sortedData = playerData.sort((a, b) => {
                 const aIndex = statTypeOrder.indexOf(a.statType);
                 const bIndex = statTypeOrder.indexOf(b.statType);
                 return aIndex - bIndex;
@@ -45,42 +40,4 @@ function TeamTables({ groupedData, groupedAlts, toggleMarketStatus }) {
   );
 }
 
-// Find odds for the given optimalLine from the array of alternate lines
-function findOddsByLine(altLines, optimalLine) {
-  return altLines.find((alt) => alt.line === optimalLine);
-}
-
-// Process player data by calculating market suspension status, highLine, and lowLine
-function processData(data, groupedAlts) {
-  return data.map((row) => {
-    const { statType, line } = row;
-
-    // Get alternate lines for the given statType
-    const altLines = groupedAlts[statType] || [];
-    const altLineValues = altLines.map((alt) => alt.line);
-
-    // Check if the optimal line exists in alternate lines
-    const optimalLineExists = altLineValues.includes(line);
-
-    // Check if any of over/under/push odds are greater than 40% for the optimal line
-    const optimalLine = row.line;
-    const {
-      overOdds = 0,
-      underOdds = 0,
-      pushOdds = 0,
-    } = findOddsByLine(altLines, optimalLine) ?? {};
-    const oddsAboveForty = Math.max(overOdds, underOdds, pushOdds) > 0.4;
-    
-
-    // Return processed row data
-    return {
-      ...row,
-      highLine: Math.max(row.line, ...altLineValues),
-      lowLine: Math.min(row.line, ...altLineValues),
-      marketSuspended:
-        !optimalLineExists || !oddsAboveForty ? 1 : row.marketSuspended,
-    };
-  });
-}
-
-export default React.memo(TeamTables)
+export default React.memo(TeamTables);
