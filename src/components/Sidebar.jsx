@@ -81,8 +81,9 @@ export default function Sidebar({
         </select>
       </div>
       <div className="filter">
-        <label htmlFor="searchFilter">Search:</label>
+        <label htmlFor="search-filter">Search:</label>
         <input
+          id="search-filter"
           type="text"
           placeholder="Search by team or player name"
           onChange={handleSearchChange}

@@ -1,12 +1,13 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import Sidebar from '../../components/Sidebar';
 
+const filters = {
+  position: { PG: true, PF: true, C: true, SF: true, SG: true },
+  statType: { points: true, rebounds: true, assists: true, steals: true },
+  marketSuspended: 'all',
+};
+
 test('renders sidebar with position and statType filters and market status dropdown', () => {
-  const filters = {
-    position: { PG: true, PF: true, C: true, SF: true, SG: true },
-    statType: { points: true, rebounds: true, assists: true, steals: true },
-    marketSuspended: 'all',
-  };
   const onFilterChange = jest.fn();
 
   render(<Sidebar filters={filters} onFilterChange={onFilterChange} />);
@@ -40,4 +41,57 @@ test('renders sidebar with position and statType filters and market status dropd
   expect(marketStatusDropdown).toHaveValue('all');
   fireEvent.change(marketStatusDropdown, { target: { value: 'suspended' } });
   expect(onFilterChange).toHaveBeenCalledWith('marketSuspended', 'suspended');
+});
+
+test('calls onFilterChange with correct arguments when position filter is changed', () => {
+  const onFilterChange = jest.fn();
+
+  render(<Sidebar filters={filters} onFilterChange={onFilterChange} />);
+
+  const positionCheckbox = screen.getByLabelText('PG');
+  fireEvent.click(positionCheckbox);
+
+  expect(onFilterChange).toHaveBeenCalledWith('position', 'PG', false);
+});
+
+test('calls onFilterChange with correct arguments when statType filter is changed', () => {
+  const onFilterChange = jest.fn();
+
+  render(<Sidebar filters={filters} onFilterChange={onFilterChange} />);
+
+  const statTypeCheckbox = screen.getByLabelText('points');
+  fireEvent.click(statTypeCheckbox);
+
+  expect(onFilterChange).toHaveBeenCalledWith('statType', 'points', false);
+});
+
+test('calls onFilterChange with correct arguments when market status dropdown is changed', () => {
+  const onFilterChange = jest.fn();
+
+  render(<Sidebar filters={filters} onFilterChange={onFilterChange} />);
+
+  const marketStatusDropdown = screen.getByLabelText('Market Status:');
+  fireEvent.change(marketStatusDropdown, { target: { value: 'suspended' } });
+
+  expect(onFilterChange).toHaveBeenCalledWith('marketSuspended', 'suspended');
+});
+
+test('calls onFilterChange with correct arguments when search bar input is changed', () => {
+  const onFilterChange = jest.fn();
+  const setSearchTerm = jest.fn();
+
+  render(
+    <Sidebar
+      filters={filters}
+      onFilterChange={onFilterChange}
+      setSearchTerm={setSearchTerm}
+      searchTerm=""
+    />
+  );
+
+  const searchInput = screen.getByLabelText('Search:');
+  fireEvent.change(searchInput, { target: { value: 'LeBron' } });
+
+  expect(setSearchTerm).toHaveBeenCalledWith('LeBron');
+  expect(onFilterChange).toHaveBeenCalledWith('searchTerm', 'LeBron');
 });

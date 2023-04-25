@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import App from '../App';
 
@@ -11,6 +11,24 @@ test('renders table headers for all player tables', () => {
   expect(screen.getAllByText(/Low Line/i).length).toBeGreaterThan(0);
   expect(screen.getAllByText(/Market Status/i).length).toBeGreaterThan(0);
 });
+
+
+test('searches for players by name or team', async () => {
+  render(<App />);
+
+  const searchInput = screen.getByLabelText(/Search/i);
+
+  // Type in search term and check that input value is updated
+  await userEvent.type(searchInput, 'LeBron');
+  expect(searchInput).toHaveValue('LeBron');
+
+  // Check that player table only displays LeBron James
+  const lebronPlayer = screen.getByText(/LeBron James/i);
+  expect(lebronPlayer).toBeInTheDocument();
+  const nonLeBronPlayers = screen.queryByText(/Stephen Curry/i);
+  expect(nonLeBronPlayers).not.toBeInTheDocument();
+});
+
 
 // Add more integration tests here:
 // - Test filtering functionality by interacting with filter controls
