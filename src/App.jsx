@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import markets from './assets/props.json';
+import initialData from './assets/props.json';
 import odds from './assets/alternates.json';
 import TeamTables from './components/TeamTable.jsx';
 import Sidebar from './components/Sidebar.jsx';
@@ -12,18 +12,18 @@ function App() {
     statType: { points: true, rebounds: true, assists: true, steals: true },
     marketSuspended: 'all',
   });
+  //create state for market status data
+  const [marketStatusData, setMarketStatusData] = useState(initialData);
 
   //create state for grouped data
   const [groupedData, setGroupedData] = useState(() =>
-    groupDataByTeamAndPlayer(markets, filters)
+    groupDataByTeamAndPlayer(marketStatusData, filters)
   );
-
-  const groupedAlts = groupAlternatesByPlayer(odds);
 
   //update grouped data when filters change
   useEffect(() => {
-    setGroupedData(groupDataByTeamAndPlayer(markets, filters));
-  }, [filters]);
+    setGroupedData(groupDataByTeamAndPlayer(marketStatusData, filters));
+  }, [filters, marketStatusData]);
 
   //updates the state of filters when applied in the sidebar
   function handleFilterChange(filterType, value, checked) {
@@ -61,7 +61,6 @@ function App() {
 
   // Function to group data by team and then by player
   function groupDataByTeamAndPlayer(data) {
-    
     const filteredData = filterData(data);
 
     return filteredData.reduce((groupedData, item) => {
@@ -82,7 +81,6 @@ function App() {
       return groupedData;
     }, {});
   }
-  // Function to group alternate odds by player and then by statType
   function groupAlternatesByPlayer(data) {
     return data.reduce((groupedData, item) => {
       const { playerId, statType } = item;
@@ -103,10 +101,42 @@ function App() {
     }, {});
   }
 
+  const groupedAlts = groupAlternatesByPlayer(odds);
+
+  // Function to toggle market status data when toggled by user
+  const toggleMarketStatus = (playerId, statType) => {
+    const updatedData = marketStatusData.map((player) => {
+      if (player.playerId === playerId && player.statType === statType) {
+        return {
+          ...player,
+          marketSuspended: !player.marketSuspended,
+        };
+      }
+      return player;
+    });
+    setMarketStatusData(updatedData);
+  };
+
+  // Function update the market suspended status based on the processedData function in TeamTables
+  const updateMarketStatusData = (playerId, statType, newStatus) => {
+    setMarketStatusData((prevData) =>
+      prevData.map((player) =>
+        player.playerId === playerId && player.statType === statType
+          ? { ...player, marketSuspended: newStatus }
+          : player
+      )
+    );
+  };
+
   return (
     <div className="App">
       <Sidebar filters={filters} onFilterChange={handleFilterChange} />
-      <TeamTables groupedData={groupedData} groupedAlts={groupedAlts} />
+      <TeamTables
+        groupedData={groupedData}
+        groupedAlts={groupedAlts}
+        toggleMarketStatus={toggleMarketStatus}
+        updateMarketStatusData={updateMarketStatusData}
+      />
     </div>
   );
 }

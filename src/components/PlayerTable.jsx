@@ -1,11 +1,18 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useCallback } from 'react';
 import { useTable } from 'react-table';
 
-function PlayerTable({ data }) {
+function PlayerTable({ data, toggleMarketStatus }) {
   // Function to capitalize the first letter of a word
   function capitalize(word) {
     return word.charAt(0).toUpperCase() + word.slice(1);
   }
+
+   const handleMarketStatusClick = useCallback(
+     (playerId, statTypeId) => {
+       toggleMarketStatus(playerId, statTypeId);
+     },
+     [toggleMarketStatus]
+   );
 
   // Define columns for the player table using React.useMemo for performance optimization
   const columns = useMemo(
@@ -30,12 +37,27 @@ function PlayerTable({ data }) {
       {
         Header: 'Market Status',
         accessor: 'marketSuspended',
-        Cell: ({ value }) => (value ? 'Suspended' : 'Open'),
+        Cell: ({ value, row }) => {
+          const onClick = () => {
+            handleMarketStatusClick(
+              row.original.playerId,
+              row.original.statType
+            );
+          };
+          const marketStatus = value ? 'Suspended' : 'Open';
+          return (
+            <span
+              onClick={onClick}
+              style={{ cursor: 'pointer', textDecoration: 'underline' }}
+            >
+              {marketStatus}
+            </span>
+          );
+        },
       },
     ],
-    []
+    [handleMarketStatusClick]
   );
-
   // Create an instance of the table using the useTable hook
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
     useTable({ columns, data });

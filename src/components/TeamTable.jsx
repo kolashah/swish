@@ -2,7 +2,7 @@ import React from 'react';
 import PlayerTable from './PlayerTable';
 
 // Render team tables with processed player data
-export default function TeamTables({ groupedData, groupedAlts }) {
+export default function TeamTables({ groupedData, groupedAlts, toggleMarketStatus }) {
   return (
     <div>
       {Object.entries(groupedData).map(([team, players]) => (
@@ -10,7 +10,6 @@ export default function TeamTables({ groupedData, groupedAlts }) {
           <h2>{team}</h2>
           <div className="playerContainer">
             {Object.entries(players).map(([playerId, playerData]) => {
-              
               // Process player data and calculate market suspension status, highLine, and lowLine
               const processedData = processData(
                 playerData,
@@ -19,7 +18,7 @@ export default function TeamTables({ groupedData, groupedAlts }) {
 
               // Sort the processedData array based on the statType property
               const statTypeOrder = ['points', 'rebounds', 'assists', 'steals'];
-              
+
               const sortedData = processedData.sort((a, b) => {
                 const aIndex = statTypeOrder.indexOf(a.statType);
                 const bIndex = statTypeOrder.indexOf(b.statType);
@@ -32,7 +31,10 @@ export default function TeamTables({ groupedData, groupedAlts }) {
                   <h3>
                     {playerData[0].playerName} ({playerData[0].position})
                   </h3>
-                  <PlayerTable data={sortedData} />
+                  <PlayerTable
+                    data={sortedData}
+                    toggleMarketStatus={toggleMarketStatus}
+                  />
                 </div>
               );
             })}
@@ -68,6 +70,7 @@ function processData(data, groupedAlts) {
       pushOdds = 0,
     } = findOddsByLine(altLines, optimalLine) ?? {};
     const oddsAboveForty = Math.max(overOdds, underOdds, pushOdds) > 0.4;
+    
 
     // Return processed row data
     return {
