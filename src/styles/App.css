@@ -1,7 +1,7 @@
 .playerContainer {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(333px, 1fr));
-  grid-gap: 20px;
+  grid-gap: 10px;
 
 }
 .player {
@@ -10,5 +10,14 @@
   padding: 10px;
   box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
 
+}
+
+body {
+  padding: 5% 10%;
+}
+
+h2, h3 {
+  text-align: center;
+  margin: .5rem 0 1rem;
 }
 

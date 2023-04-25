@@ -1,6 +1,8 @@
 import React from 'react';
 
-export default function Sidebar({ filters, onFilterChange }) {
+export default function Sidebar({ filters, onFilterChange, setSearchTerm, searchTerm }) {
+
+  
   const positions = ['PG', 'PF', 'C', 'SF', 'SG'];
   const statTypes = ['points', 'rebounds', 'assists', 'steals'];
 
@@ -13,6 +15,13 @@ export default function Sidebar({ filters, onFilterChange }) {
     const { value } = e.target;
     onFilterChange('marketSuspended', value);
   };
+
+  const handleSearchChange = (e) => {
+    const searchTerm = e.target.value;
+    setSearchTerm(searchTerm);
+    onFilterChange('searchTerm', searchTerm);
+  };
+
 
   return (
     <div className="Sidebar">
@@ -59,6 +68,15 @@ export default function Sidebar({ filters, onFilterChange }) {
           <option value="suspended">Show suspended markets only</option>
           <option value="open">Show open markets only</option>
         </select>
+      </div>
+      <div className="filter">
+        <label htmlFor="searchFilter">Search:</label>
+        <input
+          type="text"
+          placeholder="Search by team or player name"
+          onChange={handleSearchChange}
+          value={searchTerm}
+        />
       </div>
     </div>
   );

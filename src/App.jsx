@@ -11,6 +11,7 @@ function App() {
     position: { PG: true, PF: true, C: true, SF: true, SG: true },
     statType: { points: true, rebounds: true, assists: true, steals: true },
     marketSuspended: 'all',
+    searchTerm: '',
   });
   //create state for market status data
   const [marketStatusData, setMarketStatusData] = useState(initialData);
@@ -19,6 +20,8 @@ function App() {
   const [groupedData, setGroupedData] = useState(() =>
     groupDataByTeamAndPlayer(marketStatusData, filters)
   );
+
+  const [searchTerm, setSearchTerm] = useState('');
 
   //update grouped data when filters change
   useEffect(() => {
@@ -42,15 +45,24 @@ function App() {
         ...prev,
         marketSuspended: value,
       }));
+    } else if (filterType === 'searchTerm') {
+      setFilters((prev) => ({
+        ...prev,
+        searchTerm: value,
+      }));
     }
   }
 
   //when filters are applied, filter data sent to TeamTables
   function filterData(data) {
-    const { position, statType, marketSuspended } = filters;
+    const { position, statType, marketSuspended, searchTerm } = filters;
 
     return data.filter(
       (player) =>
+        (player.playerName.toLowerCase().startsWith(searchTerm.toLowerCase()) ||
+          player.teamNickname
+            .toLowerCase()
+            .startsWith(searchTerm.toLowerCase())) &&
         position[player.position] &&
         statType[player.statType] &&
         (marketSuspended === 'all' ||
@@ -130,7 +142,12 @@ function App() {
 
   return (
     <div className="App">
-      <Sidebar filters={filters} onFilterChange={handleFilterChange} />
+      <Sidebar
+        filters={filters}
+        onFilterChange={handleFilterChange}
+        setSearchTerm={setSearchTerm}
+        searchTerm={searchTerm}
+      />
       <TeamTables
         groupedData={groupedData}
         groupedAlts={groupedAlts}

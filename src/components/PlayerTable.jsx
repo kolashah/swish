@@ -7,12 +7,12 @@ function PlayerTable({ data, toggleMarketStatus }) {
     return word.charAt(0).toUpperCase() + word.slice(1);
   }
 
-   const handleMarketStatusClick = useCallback(
-     (playerId, statTypeId) => {
-       toggleMarketStatus(playerId, statTypeId);
-     },
-     [toggleMarketStatus]
-   );
+  const handleMarketStatusClick = useCallback(
+    (playerId, statTypeId) => {
+      toggleMarketStatus(playerId, statTypeId);
+    },
+    [toggleMarketStatus]
+  );
 
   // Define columns for the player table using React.useMemo for performance optimization
   const columns = useMemo(
@@ -45,13 +45,23 @@ function PlayerTable({ data, toggleMarketStatus }) {
             );
           };
           const marketStatus = value ? 'Suspended' : 'Open';
+          const buttonStyle = {
+            backgroundColor: value ? '#e57373' : '#81c784', //
+            color: 'white',
+            cursor: 'pointer',
+            border: 'none',
+            borderRadius: '6px',
+            width: '80px',
+            padding: '3px 0'
+          };
           return (
-            <span
+            <button
+              id="marketStatus"
               onClick={onClick}
-              style={{ cursor: 'pointer', textDecoration: 'underline' }}
+              style={buttonStyle}
             >
               {marketStatus}
-            </span>
+            </button>
           );
         },
       },
