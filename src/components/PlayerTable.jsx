@@ -10,6 +10,7 @@ function PlayerTable({ data, toggleMarketStatus }) {
   const handleMarketStatusClick = useCallback(
     (playerId, statTypeId) => {
       toggleMarketStatus(playerId, statTypeId);
+      
     },
     [toggleMarketStatus]
   );
@@ -39,10 +40,13 @@ function PlayerTable({ data, toggleMarketStatus }) {
         accessor: 'marketSuspended',
         Cell: ({ value, row }) => {
           const onClick = () => {
+            console.log(marketStatus);
+
             handleMarketStatusClick(
               row.original.playerId,
               row.original.statType
             );
+
           };
           const marketStatus = value ? 'Suspended' : 'Open';
           const buttonStyle = {
@@ -52,14 +56,10 @@ function PlayerTable({ data, toggleMarketStatus }) {
             border: 'none',
             borderRadius: '6px',
             width: '80px',
-            padding: '3px 0'
+            padding: '3px 0',
           };
           return (
-            <button
-              id="marketStatus"
-              onClick={onClick}
-              style={buttonStyle}
-            >
+            <button id="marketStatus" onClick={onClick} style={buttonStyle}>
               {marketStatus}
             </button>
           );

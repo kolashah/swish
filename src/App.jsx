@@ -13,7 +13,7 @@ import './styles/App.css';
 function App() {
   const [marketStatusData, setMarketStatusData] = useState(props);
   const [searchTerm, setSearchTerm] = useState('');
-  const [groupedData, setGroupedData] = useState([]);
+  // const [groupedData, setGroupedData] = useState([]);
   const [filters, setFilters] = useState({
     position: { PG: true, PF: true, C: true, SF: true, SG: true },
     statType: { points: true, rebounds: true, assists: true, steals: true },
@@ -31,9 +31,9 @@ function App() {
   }, [marketStatusData, filters]);
 
   // Update the groupedData state whenever memoizedGroupedData changes
-  useEffect(() => {
-    setGroupedData(memoizedGroupedData);
-  }, [memoizedGroupedData]);
+  // useEffect(() => {
+  //   setGroupedData(memoizedGroupedData);
+  // }, [memoizedGroupedData]);
 
   //updates the state of filters when applied in the sidebar
   const handleFilterChange = useCallback((filterType, value, checked) => {
@@ -69,6 +69,7 @@ function App() {
           marketSuspended: !player.marketSuspended,
         };
       }
+
       return player;
     });
     setMarketStatusData(updatedData);
@@ -94,7 +95,7 @@ function App() {
         searchTerm={searchTerm}
       />
       <TeamTables
-        groupedData={groupedData}
+        groupedData={memoizedGroupedData}
         toggleMarketStatus={toggleMarketStatus}
         updateMarketStatusData={updateMarketStatusData}
       />

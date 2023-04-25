@@ -40,7 +40,6 @@ export function groupDataByTeamAndPlayer(data, filters = {}) {
   }, {});
 }
 
-
 export function groupAlternatesByPlayer(data) {
   return data.reduce((groupedData, item) => {
     const { playerId, statType } = item;
@@ -93,7 +92,7 @@ export function processData(data, groupedAlts) {
       highLine: Math.max(row.line, ...altLineValues),
       lowLine: Math.min(row.line, ...altLineValues),
       marketSuspended:
-        !optimalLineExists || !oddsAboveForty ? 1 : row.marketSuspended,
+        !optimalLineExists || !oddsAboveForty ? true : row.marketSuspended,
     };
   });
 }
