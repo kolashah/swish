@@ -59,10 +59,10 @@ function App() {
 
     return data.filter(
       (player) =>
-        (player.playerName.toLowerCase().startsWith(searchTerm.toLowerCase()) ||
+        (player.playerName.toLowerCase().includes(searchTerm.toLowerCase()) ||
           player.teamNickname
             .toLowerCase()
-            .startsWith(searchTerm.toLowerCase())) &&
+            .includes(searchTerm.toLowerCase())) &&
         position[player.position] &&
         statType[player.statType] &&
         (marketSuspended === 'all' ||

@@ -1,8 +1,11 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 
-export default function Sidebar({ filters, onFilterChange, setSearchTerm, searchTerm }) {
-
-  
+export default function Sidebar({
+  filters,
+  onFilterChange,
+  setSearchTerm,
+  searchTerm,
+}) {
   const positions = ['PG', 'PF', 'C', 'SF', 'SG'];
   const statTypes = ['points', 'rebounds', 'assists', 'steals'];
 
@@ -21,7 +24,6 @@ export default function Sidebar({ filters, onFilterChange, setSearchTerm, search
     setSearchTerm(searchTerm);
     onFilterChange('searchTerm', searchTerm);
   };
-
 
   return (
     <div className="Sidebar">
