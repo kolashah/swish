@@ -2,7 +2,7 @@ import React from 'react';
 import PlayerTable from './PlayerTable';
 
 // Render team tables with processed player data
-export default function TeamTables({ groupedData, groupedAlts, toggleMarketStatus }) {
+function TeamTables({ groupedData, groupedAlts, toggleMarketStatus }) {
   return (
     <div>
       {Object.entries(groupedData).map(([team, players]) => (
@@ -82,3 +82,5 @@ function processData(data, groupedAlts) {
     };
   });
 }
+
+export default React.memo(TeamTables)

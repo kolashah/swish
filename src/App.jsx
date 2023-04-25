@@ -1,35 +1,38 @@
-import React, { useState, useEffect } from 'react';
-import initialData from './assets/props.json';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import props from './assets/props.json';
 import odds from './assets/alternates.json';
 import TeamTables from './components/TeamTable.jsx';
 import Sidebar from './components/Sidebar.jsx';
+import {
+  groupDataByTeamAndPlayer,
+  groupAlternatesByPlayer,
+} from './utils/dataUtils';
 import './styles/App.css';
 
 function App() {
-  //create state for filters
+  const [marketStatusData, setMarketStatusData] = useState(props);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [groupedData, setGroupedData] = useState([]);
   const [filters, setFilters] = useState({
     position: { PG: true, PF: true, C: true, SF: true, SG: true },
     statType: { points: true, rebounds: true, assists: true, steals: true },
     marketSuspended: 'all',
     searchTerm: '',
   });
-  //create state for market status data
-  const [marketStatusData, setMarketStatusData] = useState(initialData);
 
-  //create state for grouped data
-  const [groupedData, setGroupedData] = useState(() =>
-    groupDataByTeamAndPlayer(marketStatusData, filters)
+  // Memoize the result of groupDataByTeamAndPlayer to avoid unnecessary calculations
+  const memoizedGroupedData = useMemo(
+    () => groupDataByTeamAndPlayer(marketStatusData, filters),
+    [marketStatusData, filters]
   );
 
-  const [searchTerm, setSearchTerm] = useState('');
-
-  //update grouped data when filters change
+  // Update the groupedData state whenever memoizedGroupedData changes
   useEffect(() => {
-    setGroupedData(groupDataByTeamAndPlayer(marketStatusData, filters));
-  }, [filters, marketStatusData]);
+    setGroupedData(memoizedGroupedData);
+  }, [memoizedGroupedData]);
 
   //updates the state of filters when applied in the sidebar
-  function handleFilterChange(filterType, value, checked) {
+  const handleFilterChange = useCallback((filterType, value, checked) => {
     if (filterType === 'position') {
       setFilters((prev) => ({
         ...prev,
@@ -51,69 +54,7 @@ function App() {
         searchTerm: value,
       }));
     }
-  }
-
-  //when filters are applied, filter data sent to TeamTables
-  function filterData(data) {
-    const { position, statType, marketSuspended, searchTerm } = filters;
-
-    return data.filter(
-      (player) =>
-        (player.playerName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          player.teamNickname
-            .toLowerCase()
-            .includes(searchTerm.toLowerCase())) &&
-        position[player.position] &&
-        statType[player.statType] &&
-        (marketSuspended === 'all' ||
-          (marketSuspended === 'suspended' && player.marketSuspended) ||
-          (marketSuspended === 'open' && !player.marketSuspended))
-    );
-  }
-
-  // Function to group data by team and then by player
-  function groupDataByTeamAndPlayer(data) {
-    const filteredData = filterData(data);
-
-    return filteredData.reduce((groupedData, item) => {
-      const { teamNickname, playerId } = item;
-
-      // Initialize a new object for the team if it doesn't exist
-      if (!groupedData[teamNickname]) {
-        groupedData[teamNickname] = {};
-      }
-
-      // Initialize a new array for the player if it doesn't exist
-      if (!groupedData[teamNickname][playerId]) {
-        groupedData[teamNickname][playerId] = [];
-      }
-
-      // Add the item to the player's array
-      groupedData[teamNickname][playerId].push(item);
-      return groupedData;
-    }, {});
-  }
-  function groupAlternatesByPlayer(data) {
-    return data.reduce((groupedData, item) => {
-      const { playerId, statType } = item;
-
-      // Initialize a new object for the player if it doesn't exist
-      if (!groupedData[playerId]) {
-        groupedData[playerId] = {};
-      }
-
-      // Initialize a new array for the statType if it doesn't exist
-      if (!groupedData[playerId][statType]) {
-        groupedData[playerId][statType] = [];
-      }
-
-      // Add the item to the statType's array
-      groupedData[playerId][statType].push(item);
-      return groupedData;
-    }, {});
-  }
-
-  const groupedAlts = groupAlternatesByPlayer(odds);
+  }, []);
 
   // Function to toggle market status data when toggled by user
   const toggleMarketStatus = (playerId, statType) => {
@@ -150,7 +91,7 @@ function App() {
       />
       <TeamTables
         groupedData={groupedData}
-        groupedAlts={groupedAlts}
+        groupedAlts={groupAlternatesByPlayer(odds)}
         toggleMarketStatus={toggleMarketStatus}
         updateMarketStatusData={updateMarketStatusData}
       />

@@ -9,21 +9,30 @@ export default function Sidebar({
   const positions = ['PG', 'PF', 'C', 'SF', 'SG'];
   const statTypes = ['points', 'rebounds', 'assists', 'steals'];
 
-  const handleSidebarFilterChange = (e) => {
-    const { name, value, checked } = e.target;
-    onFilterChange(name, value, checked);
-  };
+  const handleSidebarFilterChange = useCallback(
+    (e) => {
+      const { name, value, checked } = e.target;
+      onFilterChange(name, value, checked);
+    },
+    [onFilterChange]
+  );
 
-  const handleMarketSuspendedChange = (e) => {
-    const { value } = e.target;
-    onFilterChange('marketSuspended', value);
-  };
+  const handleMarketSuspendedChange = useCallback(
+    (e) => {
+      const { value } = e.target;
+      onFilterChange('marketSuspended', value);
+    },
+    [onFilterChange]
+  );
 
-  const handleSearchChange = (e) => {
-    const searchTerm = e.target.value;
-    setSearchTerm(searchTerm);
-    onFilterChange('searchTerm', searchTerm);
-  };
+  const handleSearchChange = useCallback(
+    (e) => {
+      const searchTerm = e.target.value;
+      setSearchTerm(searchTerm);
+      onFilterChange('searchTerm', searchTerm);
+    },
+    [onFilterChange, setSearchTerm]
+  );
 
   return (
     <div className="Sidebar">
