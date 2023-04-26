@@ -28,9 +28,3 @@ test('searches for players by name or team', async () => {
   const nonLeBronPlayers = screen.queryByText(/Stephen Curry/i);
   expect(nonLeBronPlayers).not.toBeInTheDocument();
 });
-
-
-// Add more integration tests here:
-// - Test filtering functionality by interacting with filter controls
-// - Test search functionality by interacting with the search bar
-// - Test manual suspend/release functionality by interacting with corresponding controls

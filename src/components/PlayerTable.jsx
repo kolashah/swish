@@ -1,16 +1,19 @@
 import React, { useMemo, useCallback } from 'react';
 import { useTable } from 'react-table';
 
+/**
+ * Playertable component for creating each player table using react-table framework
+ */
+
 function PlayerTable({ data, toggleMarketStatus }) {
   // Function to capitalize the first letter of a word
-  function capitalize(word) {
+  const capitalize = (word) => {
     return word.charAt(0).toUpperCase() + word.slice(1);
-  }
+  };
 
   const handleMarketStatusClick = useCallback(
     (playerId, statTypeId) => {
       toggleMarketStatus(playerId, statTypeId);
-      
     },
     [toggleMarketStatus]
   );
@@ -40,17 +43,14 @@ function PlayerTable({ data, toggleMarketStatus }) {
         accessor: 'marketSuspended',
         Cell: ({ value, row }) => {
           const onClick = () => {
-            console.log(marketStatus);
-
             handleMarketStatusClick(
               row.original.playerId,
               row.original.statType
             );
-
           };
           const marketStatus = value ? 'Suspended' : 'Open';
           const buttonStyle = {
-            backgroundColor: value ? '#e57373' : '#81c784', //
+            backgroundColor: value ? '#e57373' : '#81c784',
             color: 'white',
             cursor: 'pointer',
             border: 'none',
@@ -68,6 +68,7 @@ function PlayerTable({ data, toggleMarketStatus }) {
     ],
     [handleMarketStatusClick]
   );
+
   // Create an instance of the table using the useTable hook
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
     useTable({ columns, data });

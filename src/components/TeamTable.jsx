@@ -1,8 +1,10 @@
 import React from 'react';
 import PlayerTable from './PlayerTable';
 
-// Render team tables with processed player data
-// TeamTables.jsx
+/**
+ * TeamTables component: render team tables with processed player data
+ */
+
 function TeamTables({ groupedData, toggleMarketStatus }) {
   return (
     <div>
@@ -40,4 +42,5 @@ function TeamTables({ groupedData, toggleMarketStatus }) {
   );
 }
 
+// Use React.memo to prevent unnecessary re-renders when parent component updates
 export default React.memo(TeamTables);
