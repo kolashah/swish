@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import props from './assets/props.json';
 import odds from './assets/alternates.json';
 import TeamTables from './components/TeamTable.jsx';
@@ -13,7 +13,6 @@ import './styles/App.css';
 function App() {
   const [marketStatusData, setMarketStatusData] = useState(props);
   const [searchTerm, setSearchTerm] = useState('');
-  // const [groupedData, setGroupedData] = useState([]);
   const [filters, setFilters] = useState({
     position: { PG: true, PF: true, C: true, SF: true, SG: true },
     statType: { points: true, rebounds: true, assists: true, steals: true },
@@ -30,12 +29,9 @@ function App() {
     return groupDataByTeamAndPlayer(processedData, filters);
   }, [marketStatusData, filters]);
 
-  // Update the groupedData state whenever memoizedGroupedData changes
-  // useEffect(() => {
-  //   setGroupedData(memoizedGroupedData);
-  // }, [memoizedGroupedData]);
 
   //updates the state of filters when applied in the SearchBar
+  //if i had more time i'd split this function into four
   const handleFilterChange = useCallback((filterType, value, checked) => {
     if (filterType === 'position') {
       setFilters((prev) => ({
