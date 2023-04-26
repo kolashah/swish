@@ -4,7 +4,7 @@ This project is an assessment for Swish Analytics. It showcases a web applicatio
 
 ## Features
 
-- Interactive filters for position, stat type, market status, and search
+- Interactive filters for position, stat type, market status, and live search by name and team
 - Basketball player data displayed in a table format
 - Toggle market status between Open and Suspended
 - Grouped by team and player for easy navigation
@@ -31,6 +31,13 @@ npm install
 npm start
 ```
 
+4. Running Tests
+
+```bash
+npm test
+```
+
+
 The application should now be running on \`http://localhost:3000\`.
 
 ## Technologies
@@ -41,7 +48,7 @@ The application should now be running on \`http://localhost:3000\`.
 
 ## Project Structure
 
-- \`src/assets\`: Contains the JSON data files for player props and alternate odds.
+- \`src/assets\`: Contains the mock JSON data files for player props and alternate odds.
 - \`src/components\`: Contains all the React components used in the application.
 - \`src/utils\`: Contains utility functions for data processing.
 - \`src/styles\`: Contains the CSS files for the application.
