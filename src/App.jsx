@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import props from './assets/props.json';
 import odds from './assets/alternates.json';
 import TeamTables from './components/TeamTable.jsx';
-import Sidebar from './components/Sidebar.jsx';
+import SearchBar from './components/SearchBar.jsx';
 import {
   groupDataByTeamAndPlayer,
   groupAlternatesByPlayer,
@@ -35,7 +35,7 @@ function App() {
   //   setGroupedData(memoizedGroupedData);
   // }, [memoizedGroupedData]);
 
-  //updates the state of filters when applied in the sidebar
+  //updates the state of filters when applied in the SearchBar
   const handleFilterChange = useCallback((filterType, value, checked) => {
     if (filterType === 'position') {
       setFilters((prev) => ({
@@ -88,7 +88,7 @@ function App() {
 
   return (
     <div className="App">
-      <Sidebar
+      <SearchBar
         filters={filters}
         onFilterChange={handleFilterChange}
         setSearchTerm={setSearchTerm}

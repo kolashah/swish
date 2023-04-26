@@ -1,5 +1,5 @@
 import { render, screen, fireEvent } from '@testing-library/react';
-import Sidebar from '../../components/Sidebar';
+import SearchBar from '../../components/SearchBar';
 
 const filters = {
   position: { PG: true, PF: true, C: true, SF: true, SG: true },
@@ -7,10 +7,10 @@ const filters = {
   marketSuspended: 'all',
 };
 
-test('renders sidebar with position and statType filters and market status dropdown', () => {
+test('renders SearchBar with position and statType filters and market status dropdown', () => {
   const onFilterChange = jest.fn();
 
-  render(<Sidebar filters={filters} onFilterChange={onFilterChange} />);
+  render(<SearchBar filters={filters} onFilterChange={onFilterChange} />);
 
   // Check position filters
   const positionCheckboxes = screen.getAllByLabelText(/Position:/);
@@ -46,7 +46,7 @@ test('renders sidebar with position and statType filters and market status dropd
 test('calls onFilterChange with correct arguments when position filter is changed', () => {
   const onFilterChange = jest.fn();
 
-  render(<Sidebar filters={filters} onFilterChange={onFilterChange} />);
+  render(<SearchBar filters={filters} onFilterChange={onFilterChange} />);
 
   const positionCheckbox = screen.getByLabelText('PG');
   fireEvent.click(positionCheckbox);
@@ -57,7 +57,7 @@ test('calls onFilterChange with correct arguments when position filter is change
 test('calls onFilterChange with correct arguments when statType filter is changed', () => {
   const onFilterChange = jest.fn();
 
-  render(<Sidebar filters={filters} onFilterChange={onFilterChange} />);
+  render(<SearchBar filters={filters} onFilterChange={onFilterChange} />);
 
   const statTypeCheckbox = screen.getByLabelText('points');
   fireEvent.click(statTypeCheckbox);
@@ -68,7 +68,7 @@ test('calls onFilterChange with correct arguments when statType filter is change
 test('calls onFilterChange with correct arguments when market status dropdown is changed', () => {
   const onFilterChange = jest.fn();
 
-  render(<Sidebar filters={filters} onFilterChange={onFilterChange} />);
+  render(<SearchBar filters={filters} onFilterChange={onFilterChange} />);
 
   const marketStatusDropdown = screen.getByLabelText('Market Status:');
   fireEvent.change(marketStatusDropdown, { target: { value: 'suspended' } });
@@ -81,7 +81,7 @@ test('calls onFilterChange with correct arguments when search bar input is chang
   const setSearchTerm = jest.fn();
 
   render(
-    <Sidebar
+    <SearchBar
       filters={filters}
       onFilterChange={onFilterChange}
       setSearchTerm={setSearchTerm}

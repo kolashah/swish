@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
 
-export default function Sidebar({
+export default function SearchBar({
   filters,
   onFilterChange,
   setSearchTerm,
@@ -9,7 +9,7 @@ export default function Sidebar({
   const positions = ['PG', 'PF', 'C', 'SF', 'SG'];
   const statTypes = ['points', 'rebounds', 'assists', 'steals'];
 
-  const handleSidebarFilterChange = useCallback(
+  const handleSearchBarFilterChange = useCallback(
     (e) => {
       const { name, value, checked } = e.target;
       onFilterChange(name, value, checked);
@@ -34,8 +34,9 @@ export default function Sidebar({
     [onFilterChange, setSearchTerm]
   );
 
-  return (
-    <div className="Sidebar">
+return (
+  <div className="SearchBar">
+    <div className="filterGroup">
       <div className="filter">
         <label htmlFor="position-filter">Position:</label>
         {positions.map((pos) => (
@@ -46,7 +47,7 @@ export default function Sidebar({
               name="position"
               value={pos}
               checked={filters.position[pos]}
-              onChange={handleSidebarFilterChange}
+              onChange={handleSearchBarFilterChange}
             />
             {pos}
           </label>
@@ -62,12 +63,14 @@ export default function Sidebar({
               name="statType"
               value={statType}
               checked={filters.statType[statType]}
-              onChange={handleSidebarFilterChange}
+              onChange={handleSearchBarFilterChange}
             />
             {statType}
           </label>
         ))}
       </div>
+    </div>
+    <div className="filterGroup">
       <div className="filter">
         <label htmlFor="market-status-filter">Market Status:</label>
         <select
@@ -91,5 +94,7 @@ export default function Sidebar({
         />
       </div>
     </div>
-  );
+  </div>
+);
+
 }
