@@ -7,9 +7,9 @@ import PlayerTable from './PlayerTable';
 
 function TeamTables({ groupedData, toggleMarketStatus }) {
   return (
-    <div>
+    <div className="teams">
       {Object.entries(groupedData).map(([team, players]) => (
-        <div key={team}>
+        <div className="team" key={team}>
           <h2>{team}</h2>
           <div className="playerContainer">
             {Object.entries(players).map(([playerId, playerData]) => {
