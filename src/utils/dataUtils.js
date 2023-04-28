@@ -67,10 +67,7 @@ function findOddsByLine(altLines, optimalLine) {
 let count = 0;
 // dataUtils.js
 export function processData(data, groupedAlts) {
-  console.log('processData called');
-  ;
-  count++
-  console.log(count)
+  count++;
   return data.map((row) => {
     const { playerId, statType, line } = row;
 
