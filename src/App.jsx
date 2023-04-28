@@ -10,24 +10,26 @@ import {
 } from './utils/dataUtils';
 import './styles/App.css';
 
+const initialFilters = {
+  position: { PG: true, PF: true, C: true, SF: true, SG: true },
+  statType: { points: true, rebounds: true, assists: true, steals: true },
+  marketSuspended: 'all',
+  searchTerm: '',
+};
+
 function App() {
-  const [marketStatusData, setMarketStatusData] = useState(props);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [filters, setFilters] = useState({
-    position: { PG: true, PF: true, C: true, SF: true, SG: true },
-    statType: { points: true, rebounds: true, assists: true, steals: true },
-    marketSuspended: 'all',
-    searchTerm: '',
+  // Define state variables using useState hook
+  const [processedData, setProcessedData] = useState(() => {
+    // Initialize market status data
+    return processData(props, groupAlternatesByPlayer(alternates));
   });
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filters, setFilters] = useState(initialFilters);
 
   // Memoize the result of groupDataByTeamAndPlayer to avoid unnecessary calculations
   const memoizedGroupedData = useMemo(() => {
-    const processedData = processData(
-      marketStatusData,
-      groupAlternatesByPlayer(alternates)
-    );
     return groupDataByTeamAndPlayer(processedData, filters);
-  }, [marketStatusData, filters]);
+  }, [processedData, filters]);
 
   //updates the state of filters when applied in the SearchBar
   const handleFilterChange = useCallback((filterType, value, checked) => {
@@ -50,7 +52,7 @@ function App() {
 
   // Function to toggle market status data when toggled by user
   const toggleMarketStatus = (playerId, statType) => {
-    const updatedData = marketStatusData.map((player) => {
+    const updatedData = processedData.map((player) => {
       if (player.playerId === playerId && player.statType === statType) {
         return {
           ...player,
@@ -60,7 +62,7 @@ function App() {
 
       return player;
     });
-    setMarketStatusData(updatedData);
+    setProcessedData(updatedData);
   };
 
   return (

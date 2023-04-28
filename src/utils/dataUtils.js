@@ -64,9 +64,13 @@ export function groupAlternatesByPlayer(data) {
 function findOddsByLine(altLines, optimalLine) {
   return altLines.find((alt) => alt.line === optimalLine);
 }
-
+let count = 0;
 // dataUtils.js
 export function processData(data, groupedAlts) {
+  console.log('processData called');
+  ;
+  count++
+  console.log(count)
   return data.map((row) => {
     const { playerId, statType, line } = row;
 
