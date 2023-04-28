@@ -63,17 +63,6 @@ function App() {
     setMarketStatusData(updatedData);
   };
 
-  // Function update the market suspended status based on the processedData function in TeamTables
-  const updateMarketStatusData = (playerId, statType, newStatus) => {
-    setMarketStatusData((prevData) =>
-      prevData.map((player) =>
-        player.playerId === playerId && player.statType === statType
-          ? { ...player, marketSuspended: newStatus }
-          : player
-      )
-    );
-  };
-
   return (
     <div className="App">
       <SearchBar
@@ -85,7 +74,6 @@ function App() {
       <TeamTables
         groupedData={memoizedGroupedData}
         toggleMarketStatus={toggleMarketStatus}
-        updateMarketStatusData={updateMarketStatusData}
       />
     </div>
   );
