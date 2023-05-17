@@ -1,6 +1,6 @@
-# Swish Analytics Assessment
+# Basketball Stats API Example
 
-This project is an assessment for Swish Analytics. It showcases a web application that displays basketball player data with interactive filters and the ability to toggle market statuses.
+This project showcases a web application that displays basketball player data with interactive filters and the ability to toggle market statuses.
 
 ## Features
 
